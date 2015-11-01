@@ -1,0 +1,15 @@
+{
+	Fonts
+	{
+		soul_of_vodka.ttf
+	}
+	Prefabs
+	{
+	}
+	Sounds
+	{
+	}
+	Textures
+	{
+	}
+}

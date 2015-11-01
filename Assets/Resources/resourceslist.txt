@@ -3,6 +3,10 @@
 	{
 		soul_of_vodka.ttf
 	}
+	Material
+	{
+		dev_test.mat.mat
+	}
 	Prefabs
 	{
 	}

@@ -3,15 +3,18 @@ using UnityEngine;
 
 namespace Assets.Code.UnityBehaviours.Board
 {
-    public class PogBehaviour : MonoBehaviour
+    [RequireComponent(typeof(PickUpBehaviour))]
+    internal class PogController : InitializeRequiredBehaviour
     {
+        /* REFERENCES */
         public MeshRenderer Mesh;
+        public PickUpBehaviour PickUp;
 
-        public void Start()
+        public void Initialize(string url)
         {
-            var targetUrl = "https://upload.wikimedia.org/wikipedia/commons/b/b0/PSM_V37_D105_English_tabby_cat.jpg";
+            //StartCoroutine(SetImageToUrl(url));
 
-            StartCoroutine(SetImageToUrl(targetUrl));
+            MarkAsInitialized();
         }
 
         IEnumerator SetImageToUrl(string url)
@@ -21,6 +24,11 @@ namespace Assets.Code.UnityBehaviours.Board
             yield return www;
             
             Mesh.material.mainTexture = www.texture;
+        }
+
+        public void OnMouseDown()
+        {
+            
         }
     }
 }

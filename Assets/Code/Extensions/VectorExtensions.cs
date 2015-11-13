@@ -25,6 +25,19 @@ namespace Assets.Code.Extensions
             return new Vector3((int)input.x, (int)input.y, (int)input.z);
         }
 
+        /// <summary>
+        /// makes vector a whole vector, multiplies labelled dimension for easy y-culling.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="x">0 for no x, 1 for x</param>
+        /// <param name="y">0 for no y, 1 for y</param>
+        /// <param name="z">0 for no z, 1 for z</param>
+        /// <returns></returns>
+        public static Vector3 ToBoardVector(this Vector3 input, int x, int y, int z)
+        {
+            return new Vector3((int)input.x * x, (int)input.y * y, (int)input.z * z);
+        }
+
         public static Vector2 ToWholeVector(this Vector2 input)
         {
             return new Vector2((int)input.x, (int)input.y);

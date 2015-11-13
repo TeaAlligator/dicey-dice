@@ -15,7 +15,25 @@ namespace Assets.Code.UnityBehaviours
     {
         /* REFERENCES */
         public Camera Camera;
-        private Transform _shakePerspectiveReference;
+
+        // mouse position
+        private static Plane _xzPlane = new Plane(Vector3.up, Vector3.zero);
+
+        private bool _isMouseXzPlanePositionCached;
+        private Vector3 _cachedMouseXzPlanePosition;
+        public Vector3 MouseXzPlanePosition
+        {
+            get
+            {
+                if (!_isMouseXzPlanePositionCached)
+                {
+                    _cachedMouseXzPlanePosition = CalculateMouseXZPlanePosition();
+                    _isMouseXzPlanePositionCached = true;
+                }
+
+                return _cachedMouseXzPlanePosition;
+            }
+        }
 
         /* PROPERTIES */
         private List<DelayedAction> _delayedActions;
@@ -43,6 +61,7 @@ namespace Assets.Code.UnityBehaviours
         public void Awake()
         {
             _delayedActions = new List<DelayedAction>();
+            _isMouseXzPlanePositionCached = false;
         }
 
         public void PauseGame()
@@ -77,11 +96,6 @@ namespace Assets.Code.UnityBehaviours
             #endif
         }
 
-        public void RegisterShakePerspectiveTransform(Transform shakePerspective)
-        {
-            _shakePerspectiveReference = shakePerspective;
-        }
-
         public void LoadCanvases(CanvasProvider canvasProvider)
         {
             for (var i = 0; i < transform.childCount; i++)
@@ -95,11 +109,16 @@ namespace Assets.Code.UnityBehaviours
                 }
             }
         }
-
-        public void FixedUpdate()
+        
+        public void Update()
         {
+            // update mouse plane position
+            _isMouseXzPlanePositionCached = false;
+
+            // update sin
             CurrentStaticSinValue = Math.Sin(Time.timeSinceLevelLoad);
 
+            // update delayed actions
             for (var i = 0; i < _delayedActions.Count; i++)
             {
                 if (IsPaused && !_delayedActions[i].IgnorePaused) return;
@@ -119,6 +138,28 @@ namespace Assets.Code.UnityBehaviours
         {
             if(_delayedActions != null)
                 _delayedActions.Clear();
+        }
+
+        private Vector3 CalculateMouseXZPlanePosition()
+        {
+            float distance;
+            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            if (_xzPlane.Raycast(ray, out distance))
+            {
+                var hit = ray.GetPoint(distance);
+                hit.y = 0f;
+
+                return hit;
+            }
+
+            // really id like to return a bool or something
+            // to signify if the trace was successful
+            // but with the isometric camera i cant think of a way
+            // to click on something other than the xz plane
+
+            // so i dont really care
+            return Vector3.zero;
         }
     }
 }

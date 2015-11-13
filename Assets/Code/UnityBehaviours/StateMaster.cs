@@ -3,6 +3,7 @@ using Assets.Code.DataPipeline.Loading;
 using Assets.Code.DataPipeline.Providers;
 using Assets.Code.Logic.Config;
 using Assets.Code.Logic.Logging;
+using Assets.Code.Logic.Player;
 using Assets.Code.Logic.Pooling;
 using Assets.Code.Messaging;
 using Assets.Code.Messaging.Messages;
@@ -22,7 +23,7 @@ namespace Assets.Code.UnityBehaviours
     class StateMaster : MonoBehaviour
     {
         /* REFERENCES */
-        private UnityReferenceMaster _unityReference;
+        private UnityReferenceMaster _unity;
 
         /* PROPERTIES */
         private IoCResolver _resolver;
@@ -64,9 +65,13 @@ namespace Assets.Code.UnityBehaviours
             _resolver.RegisterItem(_messager);
 
             // unity reference master
-            _unityReference = GetComponent<UnityReferenceMaster>();
-            _unityReference.DebugModeActive = false;
-            _resolver.RegisterItem(_unityReference);
+            _unity = GetComponent<UnityReferenceMaster>();
+            _unity.DebugModeActive = false;
+            _resolver.RegisterItem(_unity);
+
+            // player
+            var player = new UserAccountManager();
+            _resolver.RegisterItem(player);
 
             // material provider
             var materialProvider = new MaterialProvider(_logger);
@@ -94,7 +99,7 @@ namespace Assets.Code.UnityBehaviours
             var poolingObjectManager = new PoolingObjectManager(_logger, prefabProvider);
             _resolver.RegisterItem(poolingObjectManager);
 
-            var soundPoolManager = new PoolingAudioPlayer(_logger, _config, _unityReference, prefabProvider.GetPrefab("audio_source_prefab"));
+            var soundPoolManager = new PoolingAudioPlayer(_logger, _config, _unity, prefabProvider.GetPrefab("audio_source_prefab"));
             _resolver.RegisterItem(soundPoolManager);
 
             _particles = new PoolingParticleManager(_resolver);
@@ -102,7 +107,7 @@ namespace Assets.Code.UnityBehaviours
 
             // canvas provider
             var canvasProvider = new CanvasProvider(_logger);
-            _unityReference.LoadCanvases(canvasProvider);
+            _unity.LoadCanvases(canvasProvider);
             _resolver.RegisterItem(canvasProvider);
 
             // data provider
@@ -153,7 +158,7 @@ namespace Assets.Code.UnityBehaviours
                 
                 _uiManager.ClearUi();
                 previousState.TearDown();
-                _unityReference.ResetDelayedActions();
+                _unity.ResetDelayedActions();
                 _currentState.Initialize();
             }
 

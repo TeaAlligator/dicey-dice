@@ -5,7 +5,10 @@ using Assets.Code.Messaging;
 using Assets.Code.Messaging.Messages.Play;
 using Assets.Code.Ui;
 using Assets.Code.Ui.CanvasControllers;
+using Assets.Code.UnityBehaviours.Board;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
@@ -61,11 +64,36 @@ namespace Assets.Code.States
                     fabRigidBody.AddRelativeTorque(rollDirection * 10);
                 }
             });
+
+            var tokenFab = Object.Instantiate(_prefabProvider.GetPrefab("pog_prefab")).GetComponent<PogController>();
+            tokenFab.Initialize("https://upload.wikimedia.org/wikipedia/commons/b/b0/PSM_V37_D105_English_tabby_cat.jpg");
+            tokenFab.PickUp.Initialize(_resolver);
+            tokenFab.name = "token";
+            tokenFab.transform.position = new Vector3(0, 1, 0);
         }
 
         public override void Update() {}
 
-        public override void HandleInput() {}
+        public override void HandleInput()
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                
+            }
+        }
+
+        // http://answers.unity3d.com/questions/784617/how-do-i-block-touch-events-from-propagating-throu.html
+        private bool WasJustADamnedButton()
+        {
+            var ct = EventSystem.current;
+
+            if (!ct.IsPointerOverGameObject()) return false;
+            if (!ct.currentSelectedGameObject) return false;
+            if (ct.currentSelectedGameObject.GetComponent<Button>() == null)
+                return false;
+
+            return true;
+        }
 
         public override void TearDown()
         {

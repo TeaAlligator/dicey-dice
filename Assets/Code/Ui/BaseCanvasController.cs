@@ -13,6 +13,12 @@ namespace Assets.Code.Ui
         private readonly Dictionary<string, GameObject> _elements;
         private const string PathSeperator = "/";
 
+        protected bool ShowCanvas
+        {
+            get { return _canvasView.gameObject.activeSelf; }
+            set { _canvasView.gameObject.SetActive(value);}
+        }
+
         protected BaseCanvasController(IoCResolver resolver, Canvas canvasView)
         {
             _elements = new Dictionary<string, GameObject>();

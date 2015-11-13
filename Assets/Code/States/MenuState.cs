@@ -4,6 +4,7 @@ using Assets.Code.Messaging;
 using Assets.Code.Messaging.Messages.Menu;
 using Assets.Code.Ui;
 using Assets.Code.Ui.CanvasControllers;
+using Assets.Code.Ui.CanvasControllers.Menu;
 
 namespace Assets.Code.States
 {
@@ -29,7 +30,7 @@ namespace Assets.Code.States
         public override void Initialize()
         {
             // initialize
-            _uiManager.RegisterUi(new MenuCanvasController(_resolver, _canvasProvider.GetCanvas("menu_canvas")));
+            _uiManager.RegisterUi(new MainMenuCanvasController(_resolver, _canvasProvider.GetCanvas("menu_canvas")));
 
             _onHostGameClicked = _messager.Subscribe<HostGameClickedMessage>(message =>
             {

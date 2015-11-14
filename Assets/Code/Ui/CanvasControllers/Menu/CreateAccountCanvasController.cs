@@ -21,7 +21,7 @@ namespace Assets.Code.Ui.CanvasControllers.Menu
         private readonly InputField _usernameInputField;
         private readonly InputField _passwordInputField;
         private readonly InputField _passwordConfirmationInputField;
-        private readonly Button _registerButton;
+        private readonly Button _confirm_button;
         private readonly Button _backButton;
 
         /* PROPERTIES */
@@ -39,7 +39,7 @@ namespace Assets.Code.Ui.CanvasControllers.Menu
             ResolveElement(out _usernameInputField, "username_input_field");
             ResolveElement(out _passwordInputField, "password_input_field");
             ResolveElement(out _passwordConfirmationInputField, "password_confirmation_input_field");
-            ResolveElement(out _registerButton, "register_button");
+            ResolveElement(out _confirm_button, "confirm_button");
             ResolveElement(out _backButton, "back_button");
 
             // initialize
@@ -57,10 +57,10 @@ namespace Assets.Code.Ui.CanvasControllers.Menu
                 _usernameInputField.text = "";
                 _passwordInputField.text = "";
 
-                _registerButton.onClick.RemoveAllListeners();
+                _confirm_button.onClick.RemoveAllListeners();
                 _backButton.onClick.RemoveAllListeners();
 
-                _registerButton.onClick.AddListener(RegisterAccount);
+                _confirm_button.onClick.AddListener(RegisterAccount);
                 _backButton.onClick.AddListener(() => message.OnCancelled());
             });
         }
@@ -118,7 +118,7 @@ namespace Assets.Code.Ui.CanvasControllers.Menu
         {
             _messager.CancelSubscription(_onCreateAccountSelected);
 
-            _registerButton.onClick.RemoveAllListeners();
+            _confirm_button.onClick.RemoveAllListeners();
             _backButton.onClick.RemoveAllListeners();
 
             base.TearDown();

@@ -30,7 +30,10 @@ namespace Assets.Code.States
         public override void Initialize()
         {
             // initialize
-            _uiManager.RegisterUi(new MainMenuCanvasController(_resolver, _canvasProvider.GetCanvas("menu_canvas")));
+            _uiManager.RegisterUi(new SignInCanvasController(_resolver, _canvasProvider.GetCanvas("sign_in_canvas")));
+            _uiManager.RegisterUi(new CreateAccountCanvasController(_resolver, _canvasProvider.GetCanvas("create_account_canvas")));
+            _uiManager.RegisterUi(new MainMenuCanvasController(_resolver, _canvasProvider.GetCanvas("main_menu_canvas")));
+            _uiManager.RegisterUi(new DialoguePopUpCanvasController(_resolver, _canvasProvider.GetCanvas("pop_up_dialogue_canvas")));
 
             _onHostGameClicked = _messager.Subscribe<HostGameClickedMessage>(message =>
             {

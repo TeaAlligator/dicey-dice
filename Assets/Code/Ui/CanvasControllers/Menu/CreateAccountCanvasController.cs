@@ -21,7 +21,7 @@ namespace Assets.Code.Ui.CanvasControllers.Menu
         private readonly InputField _usernameInputField;
         private readonly InputField _passwordInputField;
         private readonly InputField _passwordConfirmationInputField;
-        private readonly Button _confirm_button;
+        private readonly Button _confirmButton;
         private readonly Button _backButton;
 
         /* PROPERTIES */
@@ -39,7 +39,7 @@ namespace Assets.Code.Ui.CanvasControllers.Menu
             ResolveElement(out _usernameInputField, "username_input_field");
             ResolveElement(out _passwordInputField, "password_input_field");
             ResolveElement(out _passwordConfirmationInputField, "password_confirmation_input_field");
-            ResolveElement(out _confirm_button, "confirm_button");
+            ResolveElement(out _confirmButton, "confirm_button");
             ResolveElement(out _backButton, "back_button");
 
             // initialize
@@ -57,10 +57,10 @@ namespace Assets.Code.Ui.CanvasControllers.Menu
                 _usernameInputField.text = "";
                 _passwordInputField.text = "";
 
-                _confirm_button.onClick.RemoveAllListeners();
+                _confirmButton.onClick.RemoveAllListeners();
                 _backButton.onClick.RemoveAllListeners();
 
-                _confirm_button.onClick.AddListener(RegisterAccount);
+                _confirmButton.onClick.AddListener(RegisterAccount);
                 _backButton.onClick.AddListener(() => message.OnCancelled());
             });
         }
@@ -74,6 +74,20 @@ namespace Assets.Code.Ui.CanvasControllers.Menu
                 _messager.Publish(new ShowPopUpDialogueMessage
                 {
                     MainDialogue = LanguageStrings.PasswordMismatchError,
+                    AllowCancel = false,
+                    OnConfirmed = () => ShowCanvas = true
+                });
+
+                return;
+            }
+            
+            // make sure the password meets the min character requirements
+            if (_passwordInputField.text.Length < GameConstants.MinPasswordCharacterCount)
+            {
+                ShowCanvas = false;
+                _messager.Publish(new ShowPopUpDialogueMessage
+                {
+                    MainDialogue = string.Format(LanguageStrings.InsufficientPasswordLength, GameConstants.MinPasswordCharacterCount),
                     AllowCancel = false,
                     OnConfirmed = () => ShowCanvas = true
                 });
@@ -118,7 +132,7 @@ namespace Assets.Code.Ui.CanvasControllers.Menu
         {
             _messager.CancelSubscription(_onCreateAccountSelected);
 
-            _confirm_button.onClick.RemoveAllListeners();
+            _confirmButton.onClick.RemoveAllListeners();
             _backButton.onClick.RemoveAllListeners();
 
             base.TearDown();
